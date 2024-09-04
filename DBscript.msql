@@ -1,0 +1,104 @@
+-- Create the database
+CREATE DATABASE OzmartRetailDB;
+
+-- Use the newly created database
+USE OzmartRetailDB;
+
+-- Create Customers Table
+CREATE TABLE CUSTOMERS (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20),
+    address_line1 VARCHAR(100),
+    address_line2 VARCHAR(100),
+    city VARCHAR(50),
+    state VARCHAR(50),
+    postal_code VARCHAR(20),
+    country VARCHAR(50)
+);
+
+-- Create Categories Table
+CREATE TABLE CATEGORIES (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL
+);
+
+-- Create Products Table
+CREATE TABLE PRODUCTS (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    product_description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES CATEGORIES(category_id)
+);
+
+-- Create Orders Table
+CREATE TABLE ORDERS (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_date DATETIME NOT NULL,
+    customer_id INT,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50),
+    FOREIGN KEY (customer_id) REFERENCES CUSTOMERS(customer_id)
+);
+
+-- Create Order_Items Table
+CREATE TABLE ORDER_ITEMS (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES ORDERS(order_id),
+    FOREIGN KEY (product_id) REFERENCES PRODUCTS(product_id)
+);
+
+-- Create Payments Table
+CREATE TABLE PAYMENTS (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    payment_date DATETIME NOT NULL,
+    payment_method VARCHAR(50),
+    payment_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES ORDERS(order_id)
+);
+
+-- Create Departments Table
+CREATE TABLE DEPARTMENTS (
+    department_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(50) NOT NULL
+);
+
+-- Create Employees Table
+CREATE TABLE EMPLOYEES (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100),
+    phone_number VARCHAR(20),
+    hire_date DATE,
+    job_title VARCHAR(50),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(department_id)
+);
+
+-- Create Warehouses Table
+CREATE TABLE WAREHOUSES (
+    warehouse_id INT AUTO_INCREMENT PRIMARY KEY,
+    warehouse_name VARCHAR(100) NOT NULL,
+    location VARCHAR(100)
+);
+
+-- Create Inventory Table
+CREATE TABLE INVENTORY (
+    inventory_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    warehouse_id INT,
+    stock_quantity INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES PRODUCTS(product_id),
+    FOREIGN KEY (warehouse_id) REFERENCES WAREHOUSES(warehouse_id)
+);
